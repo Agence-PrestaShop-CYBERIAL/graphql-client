@@ -1,6 +1,6 @@
 <?php
 
-namespace BendeckDavid\GraphqlClient\Tests;
+namespace AgenceCyberial\GraphqlClient\Tests;
 
 use Orchestra\Testbench\Concerns\WithWorkbench;
 

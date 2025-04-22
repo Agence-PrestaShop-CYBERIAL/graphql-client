@@ -1,2 +1,2 @@
 providers:
-  - BendeckDavid\GraphqlClient\GraphqlClientServiceProvider
+  - AgenceCyberial\GraphqlClient\GraphqlClientServiceProvider

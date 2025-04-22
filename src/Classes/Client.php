@@ -1,12 +1,12 @@
 <?php
 
-namespace BendeckDavid\GraphqlClient\Classes;
+namespace AgenceCyberial\GraphqlClient\Classes;
 
 use Exception;
 use Illuminate\Support\Arr;
-use BendeckDavid\GraphqlClient\Enums\Format;
-use BendeckDavid\GraphqlClient\Enums\Request;
-use BendeckDavid\GraphqlClient\Classes\Mutator;
+use AgenceCyberial\GraphqlClient\Enums\Format;
+use AgenceCyberial\GraphqlClient\Enums\Request;
+use AgenceCyberial\GraphqlClient\Classes\Mutator;
 use Illuminate\Support\Facades\Http;
 
 class Client extends Mutator {

@@ -1,9 +1,9 @@
 <?php
 
-namespace BendeckDavid\GraphqlClient\Tests\Feature\Facades;
+namespace AgenceCyberial\GraphqlClient\Tests\Feature\Facades;
 
-use BendeckDavid\GraphqlClient\Facades\GraphQL;
-use BendeckDavid\GraphqlClient\Tests\TestCase;
+use AgenceCyberial\GraphqlClient\Facades\GraphQL;
+use AgenceCyberial\GraphqlClient\Tests\TestCase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Http;
 

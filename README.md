@@ -13,7 +13,7 @@ Minimal GraphQL client for Laravel.
 
 Install Package (Composer 2+)
 ```bash
-composer require bendeckdavid/graphql-client
+composer require AgenceCyberial/graphql-client
 ```
 
 
@@ -48,7 +48,7 @@ GRAPHQL_AUTHENTICATION="bearer"
 
 Import GraphQL Client Facades
 ```php
-use BendeckDavid\GraphqlClient\Facades\GraphQL;
+use AgenceCyberial\GraphqlClient\Facades\GraphQL;
 ```
 
 #### Basic use
@@ -180,7 +180,7 @@ return GraphQL::query($query)
 
 ## Author
 
-- David Gutierrez [@bendeckdavid](https://www.github.com/bendeckdavid)
+- David Gutierrez [@AgenceCyberial](https://www.github.com/AgenceCyberial)
 
 
 ## Top Contributors ⭐
