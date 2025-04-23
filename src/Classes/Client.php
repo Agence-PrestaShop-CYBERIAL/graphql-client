@@ -1,12 +1,13 @@
 <?php
 
-namespace BendeckDavid\GraphqlClient\Classes;
+namespace AgenceCyberial\GraphqlClient\Classes;
 
 use Exception;
 use Illuminate\Support\Arr;
-use BendeckDavid\GraphqlClient\Enums\Format;
-use BendeckDavid\GraphqlClient\Enums\Request;
-use BendeckDavid\GraphqlClient\Classes\Mutator;
+use AgenceCyberial\GraphqlClient\Enums\Format;
+use AgenceCyberial\GraphqlClient\Enums\Request;
+use AgenceCyberial\GraphqlClient\Classes\Mutator;
+use Illuminate\Support\Facades\Http;
 
 class Client extends Mutator {
 
@@ -224,7 +225,26 @@ class Client extends Mutator {
     public function makeRequest(string $format, bool $rawResponse = false)
     {
         try {
-            $result = file_get_contents($this->endpoint, false, $this->request);
+            $parameters = array_merge([
+                'http' => [
+                    'method'  => 'POST',
+                    'content' => json_encode(['query' => $this->raw_query, 'variables' => $this->variables], JSON_NUMERIC_CHECK),
+                    'header'  => $this->headers,
+                ]
+            ], $this->context);
+
+            $headers = [];
+
+            foreach ($parameters['http']['header'] as $header) {
+                $parts = explode(':', $header, 2);
+                if (count($parts) < 2) {
+                    continue;
+                }
+                $headers[trim($parts[0])] = trim($parts[1]);
+            }
+
+            $response = Http::withBody($parameters['http']['content'])->withHeaders($headers)->post($this->endpoint, []);
+            $result = $response->body();
             if ($format == Format::JSON) {
                 $response = json_decode($result, false);
                 if ($rawResponse) return $response;

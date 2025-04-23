@@ -1,0 +1,2 @@
+providers:
+  - AgenceCyberial\GraphqlClient\GraphqlClientServiceProvider
