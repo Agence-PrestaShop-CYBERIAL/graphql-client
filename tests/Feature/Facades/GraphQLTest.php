@@ -13,24 +13,19 @@ class GraphQLTest extends TestCase
         Http::fake([
             'localhost*' => function (Request $request) {
 
-            if("POST" !== $request->method()) {
-                return null;
-            }
+                $this->assertSame("POST", $request->method());
 
-            if(! $request->isJson()) {
-                return null;
-            }
+                $this->assertTrue($request->isJson());
 
-            if( ! key_exists('query', $request->data())) {
-                return null;
-            }
+                $this->assertArrayHasKey('query', $request->data());
 
-            if($request->data()['query'] !== "query {entity {
+                $this->assertArrayHasKey('variables', $request->data());
+
+                $this->assertSame("query {entity {
           email
           name
-         }}") {
-                return null;
-            }
+         }}", $request->data()['query']);
+
                 return Http::response([
                     'data' => [
                         'entity' => [
@@ -53,43 +48,29 @@ class GraphQLTest extends TestCase
         Http::fake([
             'localhost*' => function (Request $request) {
 
-                if("POST" !== $request->method()) {
-                    return null;
-                }
+                $this->assertSame("POST", $request->method());
 
-                if(! $request->isJson()) {
-                    return null;
-                }
+                $this->assertTrue($request->isJson());
 
-                if( ! key_exists('query', $request->data())) {
-                    return null;
-                }
+                $this->assertArrayHasKey('query', $request->data());
 
-                if($request->data()['query'] !== "query createUser (\$email: String!, \$firstname: String!, \$lastname: String!, \$password: String!) {
+                $this->assertArrayHasKey('variables', $request->data());
+
+                $this->assertSame("query createUser (\$email: String!, \$firstname: String!, \$lastname: String!, \$password: String!) {
 		createUser(email: \$email, firstname: \$firstname, passwd: \$password, lastname: \$lastname) {
 			email
 			firstname
 			lastname
 			active
 	}
-}") {
-                    return null;
-                }
+}", $request->data()['query']);
 
-                if(! key_exists('variables', $request->data())) {
-                    return null;
-                }
-
-
-                if(array_diff([
+                $this->assertSame([
                     'email' => 'my@email.com',
                     'firstname' => 'John',
                     'lastname' => 'Doe',
                     'passwd' => 'password',
-                ], $request->data()['variables']) !== []) {
-                    return null;
-                }
-
+                ], $request->data()['variables']);
                 return Http::response([
                     'data' => [
                         'entity' => [
@@ -112,7 +93,95 @@ class GraphQLTest extends TestCase
             'firstname' => 'John',
             'lastname' => 'Doe',
             'passwd' => 'password',
-        ])->get();;
+        ])->get();
+
+        $this->assertArrayHasKey('entity', $response);
+    }
+
+    public function testGraphQLClientWithHeaders()
+    {
+        Http::fake([
+            'localhost*' => function (Request $request) {
+
+                $this->assertSame("POST", $request->method());
+
+                $this->assertTrue($request->isJson());
+
+                $this->assertArrayHasKey('Authorization', $request->headers());
+                $this->assertSame(['my-token'], $request->header('Authorization'));
+
+                $this->assertArrayHasKey('Referer', $request->headers());
+                $this->assertSame(['my-referer'], $request->header('Referer'));
+
+                $this->assertArrayHasKey('query', $request->data());
+
+                $this->assertArrayHasKey('variables', $request->data());
+
+                $this->assertSame("query {entity {
+          email
+          name
+         }}", $request->data()['query']);
+
+                return Http::response([
+                    'data' => [
+                        'entity' => [
+                            'email' => 'my@email.com',
+                            'name' => 'John Doe',
+                        ]
+                    ]
+                ]);
+            }
+        ]);
+        $response = GraphQL::endpoint("http://localhost/endpoint")->query('entity {
+          email
+          name
+         }')
+            ->withHeaders([
+                'Authorization' => 'my-token',
+                'Referer' => 'my-referer',
+            ])
+            ->get();
+
+        $this->assertArrayHasKey('entity', $response);
+    }
+
+    public function testGraphQLClientWithHeader()
+    {
+        Http::fake([
+            'localhost*' => function (Request $request) {
+
+                $this->assertSame("POST", $request->method());
+
+                $this->assertTrue($request->isJson());
+
+                $this->assertArrayHasKey('Authorization', $request->headers());
+                $this->assertSame(['my-token'], $request->header('Authorization'));
+
+                $this->assertArrayHasKey('query', $request->data());
+
+                $this->assertArrayHasKey('variables', $request->data());
+
+                $this->assertSame("query {entity {
+          email
+          name
+         }}", $request->data()['query']);
+
+                return Http::response([
+                    'data' => [
+                        'entity' => [
+                            'email' => 'my@email.com',
+                            'name' => 'John Doe',
+                        ]
+                    ]
+                ]);
+            }
+        ]);
+        $response = GraphQL::endpoint("http://localhost/endpoint")->query('entity {
+          email
+          name
+         }')
+            ->header('Authorization', 'my-token')
+            ->get();
 
         $this->assertArrayHasKey('entity', $response);
     }
