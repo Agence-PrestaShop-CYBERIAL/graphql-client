@@ -12,6 +12,11 @@ class GraphQLTest extends TestCase
     public function testGraphQLClient() {
         Http::fake([
             'localhost*' => function (Request $request) {
+
+            if("POST" !== $request->method()) {
+                return null;
+            }
+
             if(! $request->isJson()) {
                 return null;
             }
@@ -47,6 +52,11 @@ class GraphQLTest extends TestCase
     public function testGraphQLClientWithVariables() {
         Http::fake([
             'localhost*' => function (Request $request) {
+
+                if("POST" !== $request->method()) {
+                    return null;
+                }
+
                 if(! $request->isJson()) {
                     return null;
                 }
