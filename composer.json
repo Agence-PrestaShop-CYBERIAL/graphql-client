@@ -1,6 +1,5 @@
 {
   "name": "agence-cyberial/graphql-client",
-  "version": "1.4.0",
   "description": "Graphql Client for Laravel",
   "main": "index.js",
   "scripts": {
