@@ -21,6 +21,8 @@ class Client extends Mutator {
     ];
     public array $context = [];
 
+    public int $timeout = 30;
+
     public function __construct(
         protected string|null $endpoint
     )
@@ -127,6 +129,13 @@ class Client extends Mutator {
     public function context(array $context)
     {
         $this->context = $context;
+        return $this;
+    }
+
+    public function withTimeout(int $timeout)
+    {
+        $this->timeout = $timeout;
+
         return $this;
     }
 
@@ -243,7 +252,10 @@ class Client extends Mutator {
                 $headers[trim($parts[0])] = trim($parts[1]);
             }
 
-            $response = Http::withBody($parameters['http']['content'])->withHeaders($headers)->post($this->endpoint, []);
+            $response = Http::timeout($this->timeout)
+                ->withBody($parameters['http']['content'])
+                ->withHeaders($headers)
+                ->post($this->endpoint, []);
             $result = $response->body();
             if ($format == Format::JSON) {
                 $response = json_decode($result, false);
