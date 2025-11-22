@@ -4,6 +4,7 @@ namespace AgenceCyberial\GraphqlClient;
 
 use Illuminate\Support\ServiceProvider;
 use AgenceCyberial\GraphqlClient\Classes\Client;
+use AgenceCyberial\GraphqlClient\Classes\Factory;
 
 class GraphqlClientServiceProvider extends ServiceProvider
 {
@@ -14,8 +15,8 @@ class GraphqlClientServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->app->bind('graphqlClient', function($app) {
-            return new Client(config('graphqlclient.graphql_endpoint'));
+        $this->app->singleton('graphqlClient', function($app) {
+            return new Factory();
         });
         
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'graphqlclient');
